@@ -37,3 +37,15 @@ class MailingListForm(forms.ModelForm):
     class Meta:
         model = MailingList
         fields = ['owner', 'name']
+
+
+class SubscriberForm(forms.ModelForm):
+    mailing_list = forms.ModelChoiceField(
+        widget=forms.HiddenInput,
+        queryset=MailingList.objects.all(),
+        disabled=True,
+    )
+
+    class Meta:
+        model = Subscriber
+        fields = ['mailing_list', 'email', ]

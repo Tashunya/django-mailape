@@ -1,9 +1,10 @@
 from django.urls import reverse, reverse_lazy
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView, DeleteView
-from mailinglist.models import MailingList
-from mailinglist.forms import MailingListForm
-from mailinglist.mixins import UserCanUseMailingList
+from django.views.generic import ListView, CreateView, DeleteView, DetailView
+from .models import MailingList, Subscriber
+from .forms import MailingListForm, SubscriberForm
+from .mixins import UserCanUseMailingList
 
 
 class MailingListListView(LoginRequiredMixin, ListView):
@@ -24,3 +25,51 @@ class DeleteMailingListView(LoginRequiredMixin, UserCanUseMailingList,
                             DeleteView):
     model = MailingList
     success_url = reverse_lazy('mailinglist:mailinglist_list')
+
+
+class MailingListDetailView(LoginRequiredMixin, UserCanUseMailingList, DetailView):
+    model = MailingList
+
+
+class SubscribeToMailingListView(CreateView):
+    form_class = SubscriberForm
+    template_name = 'mailinglist/subscriber_form.html'
+
+    def initial(self):
+        return {'mailing_list': self.kwargs['mailinglist_id']}
+
+    def get_success_url(self):
+        return reverse('mailinglist:subscriber_thankyou',
+                       kwargs={'pk': self.object.mailing_list.id,})
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        mailing_list_id = self.kwargs['mailinglist_id']
+        ctx['mailing_list'] = get_object_or_404(MailingList, id=mailing_list_id)
+        return ctx
+
+
+class ThankYouForSubscribingView(DetailView):
+    model = MailingList
+    template_name = 'mailinglist/subscription_thankyou.html'
+
+
+class ConfirmSubscriptionView(DetailView):
+    model = Subscriber
+    template_name = 'mailinglist/confirm_subscription.html'
+
+    def get_object(self, queryset=None):
+        subscriber = super().get_object(queryset=queryset)
+        subscriber.confirmed = True
+        subscriber.save()
+        return subscriber
+
+
+class UnsubscribeView(DeleteView):
+    model = Subscriber
+    template_name = 'mailinglist/unsubscribe.html'
+
+    def get_success_url(self):
+        mailing_list = self.object.mailing_list
+        return reverse('mailinglist:subscribe',
+                       kwargs={'mailinglist_pk': mailing_list.id})
