@@ -1,0 +1,7 @@
+.idea/
+venv/
+/__pycache__/
+mailape/__pycache__/
+mailinglist/__pycache__/
+user/__pycache__/
+mailinglist/migrations/__pycache__/
