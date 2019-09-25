@@ -1,7 +1,9 @@
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DeleteView
 from mailinglist.models import MailingList
 from mailinglist.forms import MailingListForm
+from mailinglist.mixins import UserCanUseMailingList
 
 
 class MailingListListView(LoginRequiredMixin, ListView):
@@ -16,3 +18,9 @@ class CreateMailingListView(LoginRequiredMixin, CreateView):
 
     def get_initial(self):
         return {'owner': self.request.user.id}
+
+
+class DeleteMailingListView(LoginRequiredMixin, UserCanUseMailingList,
+                            DeleteView):
+    model = MailingList
+    success_url = reverse_lazy('mailinglist:mailinglist_list')
