@@ -3,7 +3,7 @@ import uuid
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
-from mailinglist import emails
+from . import emails, tasks
 
 
 class MailingList(models.Model):
@@ -48,8 +48,9 @@ class Subscriber(models.Model):
             self.send_confirmation_email()
 
     # wrap call in Subscriber method to be able to resend a confirmation email
+    # delay() executes a task asynchronously
     def send_confirmation_email(self):
-        emails.send_confirmation_email(self)
+        tasks.send_confirmation_email_to_subscriber.delay(self.id)
 
 
 class Message(models.Model):

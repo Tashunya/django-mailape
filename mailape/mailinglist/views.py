@@ -41,7 +41,7 @@ class SubscribeToMailingListView(CreateView):
 
     def get_success_url(self):
         return reverse('mailinglist:subscriber_thankyou',
-                       kwargs={'pk': self.object.mailing_list.id,})
+                       kwargs={'pk': self.object.mailing_list.id, })
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from mailinglist.models import MailingList, Subscriber, Message
+from .models import MailingList, Subscriber, Message
 
 
 class SubscriberForm(forms.ModelForm):

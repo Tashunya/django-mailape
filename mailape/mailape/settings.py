@@ -141,10 +141,10 @@ LOGOUT_REDIRECT_URL = 'user:login'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = os.getenv('EMAIL_USERNAME')
-EMAIL_USE_SSL = True
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
+EMAIL_USE_SSL = True
 
-MAILING_LIST_FROM_EMAIL = 'noreply@mailape.com'
+MAILING_LIST_FROM_EMAIL = '<noreply@example.com>'
 MAILING_LIST_LINK_DOMAIN = 'http://localhost:8000'
 
 CELERY_BROKER_URL = 'redis://localhost:6379/0'

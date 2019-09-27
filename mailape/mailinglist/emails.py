@@ -49,4 +49,5 @@ def send_confirmation_email(subscriber):
         message=text_body,
         from_email=settings.MAILING_LIST_FROM_EMAIL,
         recipient_list=(subscriber.email,),
+        fail_silently=False,
         html_message=html_body)

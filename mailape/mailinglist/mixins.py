@@ -1,5 +1,5 @@
 from django.core.exceptions import PermissionDenied, FieldDoesNotExist
-from mailinglist.models import MailingList
+from .models import MailingList
 
 
 class UserCanUseMailingList:
