@@ -1,5 +1,5 @@
 """
-WSGI config for mailape project.
+WSGI mailape for mailape project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
