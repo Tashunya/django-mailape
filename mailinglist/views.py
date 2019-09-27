@@ -36,7 +36,7 @@ class SubscribeToMailingListView(CreateView):
     form_class = SubscriberForm
     template_name = 'mailinglist/subscriber_form.html'
 
-    def initial(self):
+    def get_initial(self):
         return {'mailing_list': self.kwargs['mailinglist_id']}
 
     def get_success_url(self):
@@ -113,7 +113,7 @@ class CreateMessageView(LoginRequiredMixin, CreateView):
 
     def get_mailing_list(self):
         mailing_list = get_object_or_404(MailingList,
-                                         id=self.kwargs['mailinglist_pk'])
+                                         id=self.kwargs['mailinglist_id'])
         if not mailing_list.user_can_use_mailing_list(self.request.user):
             raise PermissionDenied()
         return mailing_list

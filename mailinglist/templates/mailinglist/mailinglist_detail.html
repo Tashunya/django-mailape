@@ -35,7 +35,7 @@
     {% for subscriber in mailinglist.subscriber_set.all %}
       <li>
         {{ subscriber.email }}
-        {{ subscriber.confirmed|yesno:"confirmed,unconfirmed" }}
+        ({{ subscriber.confirmed|yesno:"confirmed,unconfirmed" }})
         <a href="{% url "mailinglist:unsubscribe" pk=subscriber.id %}">
           Unsubscribe
         </a>
