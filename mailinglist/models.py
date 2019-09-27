@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
+from mailinglist import emails
 
 
 class MailingList(models.Model):
@@ -33,7 +34,22 @@ class Subscriber(models.Model):
     mailing_list = models.ForeignKey(to=MailingList, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ['email', 'mailing_list',]
+        unique_together = ['email', 'mailing_list', ]
+
+    # override model's save() method
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        # check if current model instance is new
+        # _state is an instance of ModelState class
+        is_new = self._state.adding or force_insert
+        super().save(force_insert=force_insert, force_update=force_update,
+                     using=using, update_fields=update_fields)
+        if is_new:
+            self.send_confirmation_email()
+
+    # wrap call in Subscriber method to be able to resend a confirmation email
+    def send_confirmation_email(self):
+        emails.send_confirmation_email(self)
 
 
 class Message(models.Model):
