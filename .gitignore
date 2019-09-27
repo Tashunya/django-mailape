@@ -3,6 +3,6 @@
 venv/
 /__pycache__/
 mailape/__pycache__/
-mailinglist/__pycache__/
-user/__pycache__/
-mailinglist/migrations/__pycache__/
+mailape/mailinglist/__pycache__/
+mailape/user/__pycache__/
+mailape/mailinglist/migrations/__pycache__/
