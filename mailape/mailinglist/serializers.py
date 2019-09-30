@@ -15,7 +15,7 @@ class MailingListSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = MailingList
-        fields = ('url', 'id', 'name', 'subscriber_set')
+        fields = ('url', 'id', 'name', 'owner', 'subscriber_set')
         read_only_fields = ('subscriber_set', )
         # extra args to field's constructor
         extra_kwargs = {
