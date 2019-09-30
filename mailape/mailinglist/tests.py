@@ -1,6 +1,9 @@
-from django.test import TestCase
-from django.contrib.auth import get_user_model
+import base64
+import json
 from unittest.mock import patch
+from django.contrib.auth import get_user_model
+from django.test import TestCase
+from rest_framework.test import APITestCase
 from .models import MailingList, Subscriber
 from .factories import SubscriberFactory
 
@@ -72,3 +75,37 @@ class SubscriberManagerTestCase(TestCase):
         self.assertEqual(len(confirmed_users), confirmed_users_qs.count())
         for user in confirmed_users_qs:
             self.assertIn(user, confirmed_users)
+
+
+class ListMailingListWithAPITestCase(APITestCase):
+
+    def setUp(self):
+        password = 'password'
+        username = 'unit test'
+        self.user = get_user_model().objects.create_user(
+            username=username,
+            password=password
+        )
+        cred_bytes = f'{username}:{password}'.encode('utf-8')
+        self.basic_auth = base64.b64encode(cred_bytes).decode('utf-8')
+
+    def test_listing_all_my_mailing_lists(self):
+        mailing_lists = [
+            MailingList.objects.create(
+                name=f'unit test {i}',
+                owner=self.user)
+            for i in range(3)
+        ]
+
+        self.client.credentials(HTTP_AUTHORIZATION=f'Basic {self.basic_auth}')
+
+        response = self.client.get('/mailinglist/api/v1/mailing-list')
+
+        self.assertEqual(200, response.status_code)
+        parsed = json.loads(response.content)
+        self.assertEqual(3, len(parsed))
+
+        content = str(response.content)
+        for ml in mailing_lists:
+            self.asserIn(str(ml.id), content)
+            self.asserIn(ml.name, content)
