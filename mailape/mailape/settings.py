@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'markdownify',
     'django_celery_results',
+    'rest_framework',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -138,6 +139,7 @@ LOGIN_URL = 'user:login'
 LOGIN_REDIRECT_URL = 'mailinglist:mailinglist_list'
 LOGOUT_REDIRECT_URL = 'user:login'
 
+# MAIL SETTINGS
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = os.getenv('EMAIL_USERNAME')
@@ -147,6 +149,21 @@ EMAIL_USE_SSL = True
 MAILING_LIST_FROM_EMAIL = '<noreply@example.com>'
 MAILING_LIST_LINK_DOMAIN = 'http://localhost:8000'
 
+# CELERY SETTINGS
 CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'django-db'
 
+# API SETTINGS
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '60/minute',
+        'anon': '30/minute',
+    },
+}
