@@ -11,4 +11,4 @@ webencodings==0.5.1
 celery==4.3.0
 redis==3.3.8
 django-celery-results==1.1.2
-
+factory_boy==2.12.0
